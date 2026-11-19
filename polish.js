@@ -1,0 +1,15 @@
+// Phase 4 enhancement layer. No changes to the existing save key or economy.
+(function(){
+ const original={lifestyle,bedroom,garage,shop,golfMenu,renderBJ};
+ function hero(kind,label){return `<div class="hero hero-${kind}" role="img" aria-label="${label}"><div class="hero-label">${label}</div></div>`}
+ home=function(){page('Welcome to Luxe Arcade',hero('home','YOUR WORLD. YOUR RULES.')+'<div class="tiles" id="tiles"></div><p class="notice">All balances and rewards are fictional. No real-money gambling.</p>');[['⌂ Lifestyle',lifestyle],['♠ Get Paid',paid],['◇ Spend Money',shop]].forEach(([t,f])=>$('#tiles').append(btn(t,f)))};
+ paid=function(){page('Get Paid',hero('golf','PLAY • EARN • PROGRESS')+'<div class="tiles" id="tiles"></div>');$('#tiles').append(btn('♠ Blackjack',blackjack),btn('⛳ Golf · 9 Holes',golfMenu))};
+ lifestyle=function(){original.lifestyle();let el=document.querySelector('.scene');if(el)el.classList.add('visual-scene','home-scene')};
+ bedroom=function(){original.bedroom();let el=document.querySelector('.scene');if(el)el.classList.add('visual-scene','room')};
+ garage=function(){original.garage();let el=document.querySelector('.scene');if(el)el.classList.add('visual-scene','garage-scene')};
+ shop=function(){original.shop();let target=document.querySelector('.storegrid');if(target)target.insertAdjacentHTML('beforebegin',hero('shop','THE LUXE COLLECTION'))};
+ golfMenu=function(){original.golfMenu();let panel=document.querySelector('.panel');if(panel)panel.insertAdjacentHTML('beforebegin',hero('golf','LAKESIDE • NINE HOLES'))};
+ renderBJ=function(){original.renderBJ();let felt=document.querySelector('.felt');if(felt){felt.insertAdjacentHTML('afterbegin','<div class="seatline"><span>CPU 1</span><span>CPU 2</span><span class="active">YOU</span><span>CPU 3</span><span>CPU 4</span></div>');felt.insertAdjacentHTML('beforebegin',hero('blackjack','LUXE CASINO • BLACKJACK'))}let note=document.querySelector('.felt ~ .panel + p');if(note)note.textContent='Single active hand. CPU seats are visual placeholders; multi-seat play remains a future improvement.'};
+ function splash(){if(sessionStorage.getItem('luxe-intro-seen'))return;let wrap=document.createElement('div');wrap.id='splash';wrap.innerHTML='<div class="splash-art"></div><div class="splash-content"><h1>♛ Luxe Arcade</h1><p>Build a life worth playing for.</p><div class="loadbar"><div id="loadfill"></div></div><p id="loadlabel">Loading 0%</p><button id="enter" style="display:none">TAP TO PLAY</button></div>';document.body.append(wrap);let values=[0,5,20,55,80,99,100],i=0;function advance(){let n=values[i++];document.querySelector('#loadfill').style.width=n+'%';document.querySelector('#loadlabel').textContent='Loading '+n+'%';if(i<values.length)setTimeout(advance,240);else{document.querySelector('#loadlabel').textContent='Ready';document.querySelector('#enter').style.display='block'}}advance();document.querySelector('#enter').onclick=()=>{sessionStorage.setItem('luxe-intro-seen','1');wrap.remove()}}
+ home();splash();
+})();
