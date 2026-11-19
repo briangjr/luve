@@ -1,20 +1,19 @@
-# Luxe Arcade — Phase 2 v0.2
+# Luxe Arcade — Phase 3 (v0.3)
 
-Upload all four website files (`index.html`, `style.css`, `app.js`, `golf.js`) into the root of your existing GitHub repository, replacing the old versions. Netlify should automatically redeploy.
+Upload all SIX website files to the root of the existing GitHub repository, replacing matching files: `index.html`, `style.css`, `app.js`, `golf.js`, `lifestyle.js`, `README.md`. Netlify will redeploy. No build step.
 
-## Included
-- Phase 1 navigation and functional single-hand blackjack, with separate fictional casino chips
-- Phase 2 golf: nine distinct procedurally drawn bird's-eye layouts; Easy and Hard; touch pull-back aiming and shot power; animated ball movement; fairway, sand, water, penalties, stroke tracking, hole advancement, round scoring and fictional cash rewards
-- Existing local browser saves continue to work
-
-## Next
-- Phase 3 lifestyle and shop systems
-- Phase 4 final art/animation pass using approved images, improved golf physics and blackjack's five-seat overhead/zoom camera system
+## Added
+- Lifestyle: residence, bedroom, interactive closet, garage with capacity restrictions
+- Shopping: clothing, shoes, jewelry, cars and upgrades, fictional cash purchases, equipped wardrobe, resale at 70% of original fictional price
+- Housing: parents' house, apartments with monthly rent and no move-in fee, houses with 5%-100% down payment and 30-year 6% simplified mortgages
+- Life: age starts at 18; completed nine-hole golf rounds advance one week; every 4 weeks advances one month and charges housing payments; 12 months advances one year
+- Existing localStorage key `luxe-v01` retained so prior cash/chips carry over
 
 ## Known limitations
-- Golf is an early arcade prototype with simplified physics and procedurally drawn course artwork, not the final photorealistic course designs.
-- Golf hole length is visual flavor; coordinates use normalized screen positions rather than real-world yards.
-- Golf has no club selection yet, and putting is simplified.
-- The first blackjack prototype still has only one player hand; the five-seat table is planned for the polish phase.
-- Progress saves in localStorage on the same browser and domain. Clearing browser data resets progress.
-- No real-money deposits, gambling, or cash-outs.
+- Graphics are placeholder icons and gradients. Approved AI-generated images and animations are planned for Phase 4.
+- Housing and finances are simplified, not financial advice; there is no tax/insurance/maintenance or amortization history screen.
+- Garage shows two visual spaces even in mansion; additional owned vehicles are listed below.
+- Blackjack remains one-hand prototype; five-seat camera mode is planned for Phase 4.
+- Golf physics/rules/animations remain Phase 2 prototype for later polish.
+- Game progress saves locally in your browser; do not clear site storage.
+- No real-money purchases, cash-out, or casino chip replenishment mechanics.
