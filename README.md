@@ -18,3 +18,7 @@
 
 ## Test
 After Netlify deploys, hard refresh. Check all scenes, golf, blackjack, purchase, garage and saved money. If images are missing, verify the `assets` folder is at the site root.
+
+
+## v0.4.1 visual alignment fix
+The original AI screen mockups contained painted-in fake buttons and text. They are now intentionally softened into decorative atmospheric artwork so no painted UI competes with functional HTML buttons. Buttons are aligned responsively in the page layout. This is an interim fix, not pixel-perfect extraction of background-only art; future clean background assets will make the scenes sharper.

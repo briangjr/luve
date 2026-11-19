@@ -51,3 +51,25 @@ nav{padding-bottom:max(9px,env(safe-area-inset-bottom));backdrop-filter:blur(15p
 #splash .loadbar>div{width:0%;height:100%;background:#55cfff;box-shadow:0 0 15px #26baff;transition:width .25s}
 #splash button{width:100%;font-size:18px}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* v0.4.1: art is atmosphere, never a second fake interface.
+   Real responsive HTML controls remain in normal document flow. */
+.hero{isolation:isolate;height:clamp(160px,46vw,225px);background:#07172b}
+.hero:before{inset:-14px;filter:blur(9px) brightness(.52) saturate(1.15);background-position:center center;transform:scale(1.05)}
+.hero:after{background:linear-gradient(180deg,#0207128a,#07142780 35%,#030a17f5 100%)}
+.hero-label{bottom:17px;text-align:center;font-size:clamp(13px,3.8vw,17px);letter-spacing:.09em}
+.hero-home,.hero-golf,.hero-blackjack,.hero-shop{height:clamp(165px,47vw,225px)}
+.scene.visual-scene{isolation:isolate;min-height:clamp(245px,72vw,325px);background-image:none!important;background-color:#0b1c2d!important}
+.scene.visual-scene:before{inset:-16px;background:linear-gradient(0deg,#03101be8,#07101a8a),var(--scene-art) center/cover no-repeat;filter:blur(9px) brightness(.67);transform:scale(1.05)}
+.scene.visual-scene.room{--scene-art:url('assets/bedroom.webp')}
+.scene.visual-scene.garage-scene{--scene-art:url('assets/garage.webp')}
+.scene.visual-scene.home-scene{--scene-art:url('assets/home.webp')}
+.scene.visual-scene .scene-title,.scene.visual-scene .scene-actions{z-index:2}
+.scene.visual-scene .scene-actions{flex-wrap:wrap;align-items:stretch}
+.scene.visual-scene .scene-actions button{min-height:48px;min-width:0;font-size:clamp(11px,3vw,14px);white-space:normal}
+.tiles{position:relative;z-index:1;display:grid;grid-template-columns:1fr;gap:12px;margin-top:16px}
+.tiles button{width:100%;min-height:64px;position:relative}
+main{min-width:0;overflow-x:hidden;padding-left:clamp(12px,4vw,18px);padding-right:clamp(12px,4vw,18px)}
+#app{width:100%;max-width:480px}
+nav button{min-width:0;white-space:normal}
+@media(max-width:350px){.stats{font-size:10px}.brand{font-size:21px}.scene-actions button{padding:9px 5px}}
