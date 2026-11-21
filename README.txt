@@ -1,1 +1,1 @@
-v0.5.7 incremental patch. Replace matching JS and index.html; merge assets folder. Requires v0.5.6. Price estimates are fictional approximate US market tiers, not live quotes. Existing saves remain. Refresh after deployment. Roulette uses one winning number for payout, wheel and result.
+Install after v0.5.7. Replace index.html, add catalog-v058.js/css and merge assets. Bedroom purchases equip a saved interior design; shoes and rooms sorted by price. Browser testing required.
