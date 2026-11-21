@@ -1,1 +1,1 @@
-v0.5.6: replace games-v055.js and games-v055.css; add both assets to existing assets folder. Roulette retains final wheel angle after redraw. Cornhole uses swipe gesture and animated slide. Browser testing pending.
+v0.5.7 incremental patch. Replace matching JS and index.html; merge assets folder. Requires v0.5.6. Price estimates are fictional approximate US market tiers, not live quotes. Existing saves remain. Refresh after deployment. Roulette uses one winning number for payout, wheel and result.

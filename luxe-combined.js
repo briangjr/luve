@@ -5,7 +5,7 @@
 'use strict';
 const money=n=>'$'+Math.round(n||0).toLocaleString('en-US');
 const art=id=>`assets/${id}.webp`;
-const assetMap={parents:'residence-parents',basic:'residence-basic',city:'residence-city',lake:'residence-parents',mansion:'residence-mansion',mega:'residence-mega',shack:'residence-shack'};
+const assetMap={ranch:'residence-ranch',craftsman:'residence-craftsman',suburban:'residence-suburban',waterfront:'residence-waterfront',penthouse:'residence-penthouse',tuscan:'residence-tuscan',modernestate:'residence-modernestate',grandestate:'residence-grandestate',parents:'residence-parents',basic:'residence-basic',city:'residence-city',lake:'residence-parents',mansion:'residence-mansion',mega:'residence-mega',shack:'residence-shack'};
 const days=l=>(l.months||0)*28+(l.weeks||0)*7;
 function initBills(l){
  if(!Array.isArray(l.housingBills)){
@@ -146,6 +146,7 @@ paintGolf=function(){
 window.__luxeGolfImage=new Image();
 window.__luxeGolfImage.onload=()=>{if(golf?.canvas)paintGolf()};
 window.__luxeGolfImage.src=art('golf-aerial');
+HOMES.push(...[{"id": "ranch", "name": "Starter Ranch", "kind": "buy", "price": 210000, "cap": 2, "icon": ""}, {"id": "craftsman", "name": "Craftsman Bungalow", "kind": "buy", "price": 325000, "cap": 2, "icon": ""}, {"id": "suburban", "name": "Suburban Family Home", "kind": "buy", "price": 475000, "cap": 2, "icon": ""}, {"id": "waterfront", "name": "Modern Waterfront Home", "kind": "buy", "price": 1250000, "cap": 2, "icon": ""}, {"id": "penthouse", "name": "City Penthouse", "kind": "buy", "price": 2200000, "cap": 2, "icon": ""}, {"id": "tuscan", "name": "Mediterranean Villa", "kind": "buy", "price": 3500000, "cap": 4, "icon": ""}, {"id": "modernestate", "name": "Modern Pool Estate", "kind": "buy", "price": 5500000, "cap": 4, "icon": ""}, {"id": "grandestate", "name": "Grand Estate", "kind": "buy", "price": 12000000, "cap": 4, "icon": ""}]);
 // Housing: preserve original catalog, add shack as an optional cheap rental.
 if(!HOMES.some(h=>h.id==='shack'))HOMES.splice(1,0,{id:'shack',name:'Rural Shack',kind:'rent',price:250,cap:2,icon:'🏚️'});
 const oldBuyHome=buyHome;
