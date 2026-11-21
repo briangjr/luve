@@ -33,3 +33,11 @@
 @keyframes bj-popup{from{opacity:0;transform:translateY(18px) scale(.95)}to{opacity:1;transform:none}}
 @media(max-width:390px){.bj-table{min-height:325px;padding:10px 2px 18px;border-width:5px}.bj-seat{min-height:110px}.bj-seat-cards{min-height:55px}.bj-card{width:16px;height:26px;font-size:9px}.bj-card small{font-size:7px}.bj-seat-label,.bj-stack{font-size:8px}.bj-table-caption{font-size:7px}}
 @media(prefers-reduced-motion:reduce){.bj-card,.bj-result-dialog{animation:none!important}}
+
+/* v0.4.8: Animate newly dealt cards only; no framed hand slots */
+.bj-card{animation:none!important}
+.bj-card.bj-new-card{animation:bj-card-from-shoe .65s cubic-bezier(.2,.7,.3,1) both!important}
+.bj-seat{background:transparent!important;border:1px solid transparent!important;box-shadow:none!important;border-radius:12px!important}
+.bj-seat.bj-active,.bj-seat.bj-selected{border-color:#d9b777a0!important;background:#18352677!important}
+.bj-table{background:linear-gradient(180deg,#001a0e33,#04211322),url('assets/casino-table.webp') center/cover!important}
+@media(prefers-reduced-motion:reduce){.bj-card.bj-new-card{animation:none!important}}

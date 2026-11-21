@@ -1,0 +1,1 @@
+v0.4.8 PATCH: Replace blackjack-v046.js and blackjack-v046.css in repo root; replace assets/casino-table.webp. Existing files and saves stay. Newly dealt cards animate once only; table has no printed betting rectangles. Browser test after Netlify deploy.

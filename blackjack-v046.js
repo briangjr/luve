@@ -1,6 +1,7 @@
 /* Luxe Arcade Blackjack update: five seats, splits, touch betting, payouts. */
 (function(){'use strict';
 let bj=null,selected=25,seat=0,animationTimer=null,sequence=0;
+let previouslyVisible=new WeakSet();
 const $b=s=>document.querySelector(s), fmt=n=>Math.round(n).toLocaleString('en-US');
 const denominations=[5,25,100,500];
 const rank=c=>c.r;
@@ -11,7 +12,7 @@ function bank(){return Math.max(0,Math.floor(state.chips||0));}
 function spend(n){if(n>bank()||n<=0)return false;state.chips-=n;save();return true;}
 function refund(n){state.chips+=n;save();}
 function hand(cards,bet,split=false){return {cards,bet,split,done:false,result:'',returned:0};}
-function create(){bj={phase:'bet',bets:[0,0,0,0,0],shoe:deck(),hands:[],dealer:[],turn:0,message:'Select chips and place bets on up to five seats.',lastBets:null,settled:[],invested:0,roundNet:0,reveal:0,modal:false};selected=25;seat=0;render();}
+function create(){previouslyVisible=new WeakSet();bj={phase:'bet',bets:[0,0,0,0,0],shoe:deck(),hands:[],dealer:[],turn:0,message:'Select chips and place bets on up to five seats.',lastBets:null,settled:[],invested:0,roundNet:0,reveal:0,modal:false};selected=25;seat=0;render();}
 function takeCard(){if(bj.shoe.length<24)bj.shoe=deck();return bj.shoe.pop();}
 function setBet(i,n){if(bj.phase!=='bet'||i<0||i>4)return;const old=bj.bets[i],diff=n-old;if(n<0||!Number.isInteger(n)||diff>bank())return;if(diff>0)spend(diff);else if(diff<0)refund(-diff);bj.bets[i]=n;seat=i;render();if(diff>0)animate('player',`seat-${i}`,diff);}
 function add(i,n){setBet(i,bj.bets[i]+n)}
@@ -55,7 +56,7 @@ function settle(){bj.phase='done';const dv=value(bj.dealer),dn=natural(bj.dealer
  bj.modal=true;render();bj.settled.forEach((x,j)=>{if(x.payout)setTimeout(()=>animate('dealer',`seat-${x.i}`,x.payout),j*180+200);else setTimeout(()=>animate(`seat-${x.i}`,'dealer',0),j*180+200);});}
 function repeat(mult){if(bj.phase!=='done')return;const bets=bj.lastBets.map(n=>n*mult),total=bets.reduce((a,b)=>a+b,0);if(total>bank()){bj.message=`Not enough chips: need ${fmt(total)}, have ${fmt(bank())}.`;render();return;}bj.phase='bet';bj.bets=[0,0,0,0,0];bj.hands=[];bj.dealer=[];bj.modal=false;for(let i=0;i<5;i++)if(bets[i]){spend(bets[i]);bj.bets[i]=bets[i];}deal();}
 function newBets(){bj.phase='bet';bj.bets=[0,0,0,0,0];bj.hands=[];bj.dealer=[];bj.modal=false;bj.turn=0;bj.message='Place new bets on any seats.';render();}
-function cards(cs,hidden=false){return cs.map((c,i)=>hidden&&i===1?'<span class="bj-card bj-back">◆</span>':`<span class="bj-card ${'♥♦'.includes(c.s)?'bj-red':''}">${c.r}<small>${c.s}</small></span>`).join('');}
+function cards(cs,hidden=false){return cs.map((c,i)=>{const fresh=!previouslyVisible.has(c);previouslyVisible.add(c);const motion=fresh?' bj-new-card':'';return hidden&&i===1?`<span class="bj-card bj-back${motion}">◆</span>`:`<span class="bj-card${motion} ${'♥♦'.includes(c.s)?'bj-red':''}">${c.r}<small>${c.s}</small></span>`}).join('');}
 function render(){
  if(!bj)return;
  const betting=bj.phase==='bet',done=bj.phase==='done',playing=bj.phase==='play',h=playing?active():null;
@@ -67,7 +68,7 @@ function render(){
    const group=bj.hands[i]||[],on=playing&&i===bj.turn;
    const shown=group.map(x=>{
       let cs=x.cards;
-      if(dealing){cs=cs.slice(0,Math.min(cs.length,visible));visible=Math.max(0,visible-cs.length);}
+      if(dealing){const shownCount=Math.min(cs.length,visible);cs=cs.slice(0,shownCount);visible=Math.max(0,visible-shownCount);}
       return `<div class="bj-hand">${cards(cs)}<span>${x.result||(!dealing&&x.cards.length?value(x.cards):'')}</span></div>`;
    }).join('');
    const stake=group.length?group.reduce((sum,x)=>sum+x.bet,0):bj.bets[i];
