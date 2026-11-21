@@ -1,0 +1,26 @@
+LUXE ARCADE — PREMIUM HOME v0.4.4
+Based on the verified GitHub repository: briangjr/luve, branch main.
+
+CHANGED EXISTING FILES:
+  index.html — refined brand markup and theme color; same JavaScript load order.
+  premium.css — replaces neon-blue presentation with restrained private-banking design and responsive controls.
+  premium.js — premium lifestyle home screen wired to existing lifestyle(), paid(), and shop() functions.
+
+NEW FILES (PUT INSIDE THE EXISTING assets/ DIRECTORY):
+  assets/empire-residence.webp
+  assets/lifestyle-suite.webp
+  assets/get-paid-tables.webp
+  assets/spend-money-auto.webp
+
+ALL OTHER FILES MUST REMAIN UNCHANGED.
+
+INSTALL:
+1. Extract this patch ZIP.
+2. GitHub > briangjr/luve > main. Upload/replace the three changed root files.
+3. Add the four images to the existing assets/ folder. Preserve paths exactly.
+4. Commit. Netlify will redeploy. Refresh or open a private browser tab if cached.
+
+Notes: Image assets are photographic crops from the previously approved generated
+concept, with original baked-in UI removed. All actual text and controls are HTML.
+This is still a mobile-web visual refinement, not a pixel-identical native app.
+Gameplay JS, localStorage key luxe-v01, saved balances and progress are untouched.
