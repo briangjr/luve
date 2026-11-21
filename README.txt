@@ -1,1 +1,1 @@
-Requires v0.5.4 installed. Replace index.html and add games-v055.js/css. Roulette uses fictional cash, single-zero wheel, straight and listed outside bets. Cornhole uses CSS first-person scenery, hold and drag, CPU, cancellation and exact 21. No sound. Browser testing pending.
+v0.5.6: replace games-v055.js and games-v055.css; add both assets to existing assets folder. Roulette retains final wheel angle after redraw. Cornhole uses swipe gesture and animated slide. Browser testing pending.
