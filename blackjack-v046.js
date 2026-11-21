@@ -8,18 +8,18 @@ const rank=c=>c.r;
 const cardValue=h=>value(h.cards);
 const isNatural=h=>h.cards.length===2&&value(h.cards)===21&&!h.split;
 const sameRank=(a,b)=>a.r===b.r;
-function bank(){return Math.max(0,Math.floor(state.chips||0));}
-function spend(n){if(n>bank()||n<=0)return false;state.chips-=n;save();return true;}
-function refund(n){state.chips+=n;save();}
+function bank(){return Math.max(0,Math.floor(Number(state.cash)||0));}
+function spend(n){if(n>bank()||n<=0)return false;state.cash-=n;save();return true;}
+function refund(n){state.cash+=n;save();}
 function hand(cards,bet,split=false){return {cards,bet,split,done:false,result:'',returned:0};}
-function create(){previouslyVisible=new WeakSet();bj={phase:'bet',bets:[0,0,0,0,0],shoe:deck(),hands:[],dealer:[],turn:0,message:'Select chips and place bets on up to five seats.',lastBets:null,settled:[],invested:0,roundNet:0,reveal:0,modal:false};selected=25;seat=0;render();}
+function create(){previouslyVisible=new WeakSet();bj={phase:'bet',bets:[0,0,0,0,0],shoe:deck(),hands:[],dealer:[],turn:0,message:'Select a chip denomination and place bets using your cash balance.',lastBets:null,settled:[],invested:0,roundNet:0,reveal:0,modal:false};selected=25;seat=0;render();}
 function takeCard(){if(bj.shoe.length<24)bj.shoe=deck();return bj.shoe.pop();}
 function setBet(i,n){
  if(bj.phase!=='bet'||i<0||i>4)return;
  const old=bj.bets[i],diff=n-old;
  if(!Number.isInteger(n)||n<0){bj.message='Select a valid chip amount.';render();return;}
- if(diff>bank()){bj.message=`Not enough chips for this bet. You have ${fmt(bank())} available.`;render();return;}if(diff>0)spend(diff);else if(diff<0)refund(-diff);bj.bets[i]=n;seat=i;
- bj.message=diff>0?`Added ${fmt(diff)} chips to Hand ${i+1}. Tap another hand or DEAL CARDS.`:'Bet updated.';
+ if(diff>bank()){bj.message=`Not enough money for this bet. You have ${fmt(bank())} available.`;render();return;}if(diff>0)spend(diff);else if(diff<0)refund(-diff);bj.bets[i]=n;seat=i;
+ bj.message=diff>0?`Added $${fmt(diff)} to Hand ${i+1}. Tap another hand or DEAL CARDS.`:'Bet updated.';
  render();if(diff>0)animateChipToSeat(i,diff);}
 function add(i,n){setBet(i,bj.bets[i]+n)}
 function deal(){
@@ -58,9 +58,9 @@ function dealerPlay(){bj.phase='dealer';bj.message='Dealer reveals the hole card
   else settle();
  },750);}
 function settle(){bj.phase='done';const dv=value(bj.dealer),dn=natural(bj.dealer);let won=0;bj.settled=[];for(let i=0;i<5;i++)for(const h of bj.hands[i]){const p=cardValue(h),pn=isNatural(h);let payout=0;if(p>21){h.result='Bust';}else if(pn&&!dn){payout=Math.floor(h.bet*2.5);h.result='Blackjack 3:2';}else if(dn&&!pn){h.result='Dealer blackjack';}else if(dv>21||p>dv){payout=h.bet*2;h.result='Win';}else if(p===dv){payout=h.bet;h.result='Push';}else h.result='Loss';h.returned=payout;if(payout){refund(payout);won+=payout;}bj.settled.push({i,payout,result:h.result});}bj.roundNet=won-bj.invested;
- bj.message=`Round complete · ${bj.roundNet>=0?'+':'−'}${fmt(Math.abs(bj.roundNet))} chips ${bj.roundNet>=0?'profit':'loss'}.`;
+ bj.message=`Round complete · ${bj.roundNet>=0?'+':'−'}$${fmt(Math.abs(bj.roundNet))} ${bj.roundNet>=0?'profit':'loss'}.`;
  bj.modal=true;render();bj.settled.forEach((x,j)=>{if(x.payout)setTimeout(()=>animate('dealer',`seat-${x.i}`,x.payout),j*180+200);else setTimeout(()=>animate(`seat-${x.i}`,'dealer',0),j*180+200);});}
-function repeat(mult){if(bj.phase!=='done')return;const bets=bj.lastBets.map(n=>n*mult),total=bets.reduce((a,b)=>a+b,0);if(total>bank()){bj.message=`Not enough chips: need ${fmt(total)}, have ${fmt(bank())}.`;render();return;}bj.phase='bet';bj.bets=[0,0,0,0,0];bj.hands=[];bj.dealer=[];bj.modal=false;for(let i=0;i<5;i++)if(bets[i]){spend(bets[i]);bj.bets[i]=bets[i];}deal();}
+function repeat(mult){if(bj.phase!=='done')return;const bets=bj.lastBets.map(n=>n*mult),total=bets.reduce((a,b)=>a+b,0);if(total>bank()){bj.message=`Not enough money: need ${fmt(total)}, have ${fmt(bank())}.`;render();return;}bj.phase='bet';bj.bets=[0,0,0,0,0];bj.hands=[];bj.dealer=[];bj.modal=false;for(let i=0;i<5;i++)if(bets[i]){spend(bets[i]);bj.bets[i]=bets[i];}deal();}
 function newBets(){bj.phase='bet';bj.bets=[0,0,0,0,0];bj.hands=[];bj.dealer=[];bj.modal=false;bj.turn=0;bj.message='Place new bets on any seats.';render();}
 function cards(cs,hidden=false){return cs.map((c,i)=>{const fresh=!previouslyVisible.has(c);previouslyVisible.add(c);const motion=fresh?' bj-new-card':'';return hidden&&i===1?`<span class="bj-card bj-back${motion}">◆</span>`:`<span class="bj-card${motion} ${'♥♦'.includes(c.s)?'bj-red':''}">${c.r}<small>${c.s}</small></span>`}).join('');}
 function render(){
@@ -78,20 +78,20 @@ function render(){
       return `<div class="bj-hand">${cards(cs)}<span>${x.result||(!dealing&&x.cards.length?value(x.cards):'')}</span></div>`;
    }).join('');
    const stake=group.length?group.reduce((sum,x)=>sum+x.bet,0):bj.bets[i];
-   return `<button type="button" class="bj-seat ${on?'bj-active':''} ${betting&&i===seat?'bj-selected':''}" data-seat="${i}" id="seat-${i}" aria-label="Seat ${i+1}, ${stake} chips">
+   return `<button type="button" class="bj-seat ${on?'bj-active':''} ${betting&&i===seat?'bj-selected':''}" data-seat="${i}" id="seat-${i}" aria-label="Seat ${i+1}, $${stake} wager">
     <span class="bj-seat-label">HAND ${i+1}</span><div class="bj-seat-cards">${shown}</div>
-    <span class="bj-stack">${stake?`<span class="bj-mini-chips" aria-hidden="true"><i></i><i></i><i></i></span><span class="bj-stake-amount">${fmt(stake)}</span>`:'+ BET'}</span></button>`;
+    <span class="bj-stack">${stake?`<span class="bj-mini-chips" aria-hidden="true"><i></i><i></i><i></i></span><span class="bj-stake-amount">$${fmt(stake)}</span>`:'+ BET'}</span></button>`;
  }).join('');
  page('Blackjack',`<section class="bj-app">
- <div class="bj-top"><span>PRIVATE TABLE · FIVE HANDS</span><strong>${fmt(bank())} CHIPS</strong></div>
+ <div class="bj-top"><span>PRIVATE TABLE · FIVE HANDS</span><strong>$${fmt(bank())} CASH</strong></div>
  <div class="bj-table"><div class="bj-dealer" id="dealer"><span>DEALER ${bj.dealer.length&&!playing&&!dealing?value(bj.dealer):''}</span>
  <div class="bj-shoe" aria-hidden="true">▰<small>SHOE</small></div><div class="bj-dealer-cards">${cards(dealerCards,playing||dealing)}</div></div>
  <div class="bj-seats">${seatHTML}</div><div class="bj-table-caption">BLACKJACK PAYS 3 TO 2 · DEALER STANDS ON 17</div></div>
  <p class="bj-message" role="status">${bj.message}</p><div id="bj-controls"></div><div id="bj-flying" aria-hidden="true"></div>
  ${done&&bj.modal?`<div class="bj-overlay" id="bj-overlay"><div class="bj-result-dialog" role="dialog" aria-modal="true" aria-label="Round result">
- <div class="bj-result-kicker">ROUND COMPLETE</div><div class="bj-net ${bj.roundNet>=0?'positive':'negative'}">${bj.roundNet>=0?'+':'−'}${fmt(Math.abs(bj.roundNet))}</div>
- <div class="bj-result-label">${bj.roundNet>0?'TOTAL PROFIT':bj.roundNet<0?'TOTAL LOSS':'BREAK EVEN'} · CHIPS</div>
- <div class="bj-result-stats"><span>Total wagered <b>${fmt(bj.invested)}</b></span><span>Returned <b>${fmt(bj.invested+bj.roundNet)}</b></span></div>
+ <div class="bj-result-kicker">ROUND COMPLETE</div><div class="bj-net ${bj.roundNet>=0?'positive':'negative'}">${bj.roundNet>=0?'+':'−'}$${fmt(Math.abs(bj.roundNet))}</div>
+ <div class="bj-result-label">${bj.roundNet>0?'TOTAL PROFIT':bj.roundNet<0?'TOTAL LOSS':'BREAK EVEN'}</div>
+ <div class="bj-result-stats"><span>Total wagered <b >$${fmt(bj.invested)}</b></span><span>Returned <b >$${fmt(bj.invested+bj.roundNet)}</b></span></div>
  <button id="bj-result-close">View Table & Continue</button></div></div>`:''}
  </section>`);
  const controls=$b('#bj-controls');
@@ -103,14 +103,14 @@ function render(){
  });
  if(betting){
   controls.innerHTML=`<div class="bj-tray"><div class="bj-tray-label">SELECT A CHIP · TAP A HAND TO BET</div>
-  <div class="bj-chiprow">${denominations.map(n=>`<button draggable="true" data-chip="${n}" class="bj-chip ${selected===n?'chosen':''}">${fmt(n)}</button>`).join('')}</div>
-  <div class="bj-summary">Total wager: <b>${fmt(bj.bets.reduce((a,b)=>a+b,0))}</b></div>
+  <div class="bj-chiprow">${denominations.map(n=>`<button draggable="true" data-chip="${n}" class="bj-chip ${selected===n?'chosen':''}" >$${fmt(n)}</button>`).join('')}</div>
+  <div class="bj-summary">Total wager: <b>$${fmt(bj.bets.reduce((a,b)=>a+b,0))}</b></div>
   <div class="bj-buttons bj-bet-actions"><button id="bj-clear">Clear Bets</button><button class="bj-primary" id="bj-deal" ${bj.bets.some(Boolean)?'':'disabled'}>DEAL CARDS <span>➜</span></button></div></div>`;
-  controls.querySelectorAll('[data-chip]').forEach(el=>{el.onclick=()=>{selected=+el.dataset.chip;bj.message=`${fmt(selected)} chip selected. Tap a hand to place it.`;render()};el.ondragstart=e=>e.dataTransfer.setData('text/plain',el.dataset.chip)});
+  controls.querySelectorAll('[data-chip]').forEach(el=>{el.onclick=()=>{selected=+el.dataset.chip;bj.message=`$${fmt(selected)} chip selected. Tap a hand to place it.`;render()};el.ondragstart=e=>e.dataTransfer.setData('text/plain',el.dataset.chip)});
   $b('#bj-clear').onclick=()=>{for(let i=0;i<5;i++)if(bj.bets[i])refund(bj.bets[i]);bj.bets.fill(0);render()};
   $b('#bj-deal').onclick=deal;
  }else if(playing){
-  controls.innerHTML=`<div class="bj-turn">HAND ${bj.turn+1} · ${fmt(h.bet)} chips · Split ${bj.hands[bj.turn].indexOf(h)+1}/${bj.hands[bj.turn].length}</div>
+  controls.innerHTML=`<div class="bj-turn">HAND ${bj.turn+1} · $${fmt(h.bet)} · Split ${bj.hands[bj.turn].indexOf(h)+1}/${bj.hands[bj.turn].length}</div>
   <div class="bj-buttons bj-play-actions"><button class="bj-primary" id="bj-hit">HIT</button><button id="bj-stand">STAND</button>
   <button id="bj-double" ${h.cards.length===2&&bank()>=h.bet?'':'disabled'}>DOUBLE</button>
   <button id="bj-split" ${h.cards.length===2&&sameRank(h.cards[0],h.cards[1])&&bank()>=h.bet?'':'disabled'}>SPLIT</button></div>`;

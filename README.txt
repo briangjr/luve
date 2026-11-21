@@ -1,16 +1,12 @@
-LUXE ARCADE BLACKJACK v0.5.0 — FIX FOR BETTING / CHIP ANIMATIONS
-Upload to GitHub root, replacing ONLY:
-- blackjack-v046.js
-- blackjack-v046.css
+LUXE ARCADE v0.5.1 — UNIFIED CASH BALANCE
 
-Keep index.html and assets/casino-table.webp unchanged.
+Replace ONLY blackjack-v046.js in the repository root.
+No other files need updating.
 
-Updates:
-- Chip taps and five hand betting have explicit feedback messages
-- Shows a clear insufficient-chips warning instead of silently ignoring a bet
-- Chip flight now uses visible poker-chip tokens on top of the screen
-- Improved touch targets and selection highlights
-- No changes to blackjack rules or your save data
+Blackjack now uses state.cash, the same dollar balance shown in the game's top header and used by Lifestyle/Shop.
+Bets subtract dollars from cash immediately; wins, pushes and blackjack payouts return dollars to cash.
+Splits and doubles charge the same cash account. The old state.chips field is left untouched for compatibility with old saves, but Blackjack no longer uses it.
+The on-table chips are visual betting tokens representing dollars, not a separate currency.
 
-After Netlify deploys, hard refresh the browser to clear the old JavaScript:
-iPhone Safari: close tab and reopen; desktop: Ctrl+Shift+R.
+IMPORTANT: Existing chips balance is not automatically transferred to cash to avoid unintentionally creating extra money.
+Existing cash savings are preserved.
