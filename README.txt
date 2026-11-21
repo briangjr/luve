@@ -1,16 +1,16 @@
-LUXE ARCADE BLACKJACK v0.4.9 — CHANGED FILES ONLY
+LUXE ARCADE BLACKJACK v0.5.0 — FIX FOR BETTING / CHIP ANIMATIONS
+Upload to GitHub root, replacing ONLY:
+- blackjack-v046.js
+- blackjack-v046.css
 
-Replace at repository root:
-  blackjack-v046.js
-  blackjack-v046.css
-Keep the existing assets/casino-table.webp from v0.4.8 (same image included here for convenience).
-If missing, add assets/casino-table.webp from this ZIP.
+Keep index.html and assets/casino-table.webp unchanged.
 
-Changes:
-- Removed Hand dropdown, Exact Wager input and Set Bet button.
-- Tap a denomination chip, then tap any of five seats to place a bet; drag/drop also supported.
-- Stacked gold chips appear at each seat, plus moving chip animation on bets.
-- Tightened mobile layout for five seats; keeps clean table image from v0.4.8.
-- All prior blackjack game mechanics retained.
+Updates:
+- Chip taps and five hand betting have explicit feedback messages
+- Shows a clear insufficient-chips warning instead of silently ignoring a bet
+- Chip flight now uses visible poker-chip tokens on top of the screen
+- Improved touch targets and selection highlights
+- No changes to blackjack rules or your save data
 
-Browser/device verification still required.
+After Netlify deploys, hard refresh the browser to clear the old JavaScript:
+iPhone Safari: close tab and reopen; desktop: Ctrl+Shift+R.

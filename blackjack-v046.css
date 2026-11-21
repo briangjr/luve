@@ -64,3 +64,13 @@
 .bj-bet-fly{font-size:32px;color:#e8b960;text-shadow:0 0 0 #a8792b,0 2px 7px #000;animation-duration:.75s}
 .bj-message{margin:10px 0 12px!important;min-height:32px!important}
 @media(max-width:390px){.bj-table{min-height:350px!important;padding:13px 4px 20px!important}.bj-seat{min-height:118px!important}.bj-stake-amount{font-size:9px}}
+
+/* v0.5.0 reliability and touch feedback */
+.bj-seat{touch-action:manipulation;cursor:pointer;position:relative}
+.bj-seat:active{filter:brightness(1.35)}
+.bj-chip{touch-action:manipulation;cursor:pointer}
+.bj-chip.chosen{outline:3px solid #ffdb91!important;outline-offset:4px;box-shadow:0 0 18px #d6a452aa,0 4px 8px #0009!important}
+.bj-bet-fly{display:block!important;position:fixed!important;pointer-events:none!important;border-radius:50%;width:29px;height:29px;line-height:26px;text-align:center;background:radial-gradient(circle,#d5ae65,#876025);border:3px dashed #f5e1a4;color:#fbe6b9!important;font-size:18px!important;box-shadow:0 3px 12px #0009;animation:bj-chip-flight .75s cubic-bezier(.15,.75,.2,1) forwards!important}
+.bj-seat .bj-mini-chips{animation:bj-stack-appear .25s ease-out}
+@keyframes bj-stack-appear{from{opacity:0;transform:translateY(-8px) scale(.8)}to{opacity:1;transform:none}}
+.bj-message{font-size:13px!important;line-height:1.4}

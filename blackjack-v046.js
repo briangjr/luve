@@ -14,7 +14,13 @@ function refund(n){state.chips+=n;save();}
 function hand(cards,bet,split=false){return {cards,bet,split,done:false,result:'',returned:0};}
 function create(){previouslyVisible=new WeakSet();bj={phase:'bet',bets:[0,0,0,0,0],shoe:deck(),hands:[],dealer:[],turn:0,message:'Select chips and place bets on up to five seats.',lastBets:null,settled:[],invested:0,roundNet:0,reveal:0,modal:false};selected=25;seat=0;render();}
 function takeCard(){if(bj.shoe.length<24)bj.shoe=deck();return bj.shoe.pop();}
-function setBet(i,n){if(bj.phase!=='bet'||i<0||i>4)return;const old=bj.bets[i],diff=n-old;if(n<0||!Number.isInteger(n)||diff>bank())return;if(diff>0)spend(diff);else if(diff<0)refund(-diff);bj.bets[i]=n;seat=i;render();if(diff>0)animateChipToSeat(i,diff);}
+function setBet(i,n){
+ if(bj.phase!=='bet'||i<0||i>4)return;
+ const old=bj.bets[i],diff=n-old;
+ if(!Number.isInteger(n)||n<0){bj.message='Select a valid chip amount.';render();return;}
+ if(diff>bank()){bj.message=`Not enough chips for this bet. You have ${fmt(bank())} available.`;render();return;}if(diff>0)spend(diff);else if(diff<0)refund(-diff);bj.bets[i]=n;seat=i;
+ bj.message=diff>0?`Added ${fmt(diff)} chips to Hand ${i+1}. Tap another hand or DEAL CARDS.`:'Bet updated.';
+ render();if(diff>0)animateChipToSeat(i,diff);}
 function add(i,n){setBet(i,bj.bets[i]+n)}
 function deal(){
  if(bj.phase!=='bet'||!bj.bets.some(Boolean))return;
@@ -91,16 +97,16 @@ function render(){
  const controls=$b('#bj-controls');
  document.querySelectorAll('[data-seat]').forEach(el=>{
   const i=Number(el.dataset.seat);
-  el.onclick=()=>{seat=i;if(betting)add(i,selected);};
+  el.onclick=()=>{if(betting){seat=i;add(i,selected);}};
   el.ondragover=e=>{if(betting)e.preventDefault()};
-  el.ondrop=e=>{e.preventDefault();if(betting)add(i,Number(e.dataTransfer.getData('text/plain'))||selected)};
+  el.ondrop=e=>{e.preventDefault();if(betting){seat=i;add(i,Number(e.dataTransfer.getData('text/plain'))||selected);}};
  });
  if(betting){
   controls.innerHTML=`<div class="bj-tray"><div class="bj-tray-label">SELECT A CHIP · TAP A HAND TO BET</div>
   <div class="bj-chiprow">${denominations.map(n=>`<button draggable="true" data-chip="${n}" class="bj-chip ${selected===n?'chosen':''}">${fmt(n)}</button>`).join('')}</div>
   <div class="bj-summary">Total wager: <b>${fmt(bj.bets.reduce((a,b)=>a+b,0))}</b></div>
   <div class="bj-buttons bj-bet-actions"><button id="bj-clear">Clear Bets</button><button class="bj-primary" id="bj-deal" ${bj.bets.some(Boolean)?'':'disabled'}>DEAL CARDS <span>➜</span></button></div></div>`;
-  controls.querySelectorAll('[data-chip]').forEach(el=>{el.onclick=()=>{selected=+el.dataset.chip;render()};el.ondragstart=e=>e.dataTransfer.setData('text/plain',el.dataset.chip)});
+  controls.querySelectorAll('[data-chip]').forEach(el=>{el.onclick=()=>{selected=+el.dataset.chip;bj.message=`${fmt(selected)} chip selected. Tap a hand to place it.`;render()};el.ondragstart=e=>e.dataTransfer.setData('text/plain',el.dataset.chip)});
   $b('#bj-clear').onclick=()=>{for(let i=0;i<5;i++)if(bj.bets[i])refund(bj.bets[i]);bj.bets.fill(0);render()};
   $b('#bj-deal').onclick=deal;
  }else if(playing){
@@ -122,10 +128,10 @@ function animateChipToSeat(i,amount){
  const count=Math.min(3,Math.max(1,Math.ceil(amount/100)));
  for(let j=0;j<count;j++){
   const token=document.createElement('span');token.className='bj-fly bj-bet-fly';
-  token.textContent='●';token.style.left=(a.left+a.width/2)+'px';token.style.top=(a.top+a.height/2)+'px';
+  token.textContent='◉';token.style.left=(a.left+a.width/2)+'px';token.style.top=(a.top+a.height/2)+'px';
   token.style.setProperty('--dx',(b.left+b.width/2-a.left-a.width/2)+'px');
   token.style.setProperty('--dy',(b.top+b.height*.83-a.top-a.height/2)+'px');
-  token.style.animationDelay=(j*90)+'ms';document.body.append(token);
+  token.style.animationDelay=(j*90)+'ms';token.style.zIndex='99999';document.body.append(token);
   token.addEventListener('animationend',()=>token.remove(),{once:true});
  }
 }
