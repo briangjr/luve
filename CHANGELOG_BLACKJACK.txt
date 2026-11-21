@@ -1,0 +1,5 @@
+Luxe Arcade Blackjack five-seat patch
+Replace root index.html. Add blackjack-v046.js and blackjack-v046.css to root.
+No other files need replacement. This patch assumes luxe-combined.js and assets/casino-table.webp already exist.
+Includes five betting spots, chip tray, touch/drag betting, exact wager, splitting matching ranks, hit after split including aces, double, payouts, dealer rules, rebet/double rebet/new bet, and chip motion.
+Not yet browser-tested or deployed. No real-money gambling.
