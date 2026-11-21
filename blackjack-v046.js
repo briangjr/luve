@@ -14,7 +14,7 @@ function refund(n){state.chips+=n;save();}
 function hand(cards,bet,split=false){return {cards,bet,split,done:false,result:'',returned:0};}
 function create(){previouslyVisible=new WeakSet();bj={phase:'bet',bets:[0,0,0,0,0],shoe:deck(),hands:[],dealer:[],turn:0,message:'Select chips and place bets on up to five seats.',lastBets:null,settled:[],invested:0,roundNet:0,reveal:0,modal:false};selected=25;seat=0;render();}
 function takeCard(){if(bj.shoe.length<24)bj.shoe=deck();return bj.shoe.pop();}
-function setBet(i,n){if(bj.phase!=='bet'||i<0||i>4)return;const old=bj.bets[i],diff=n-old;if(n<0||!Number.isInteger(n)||diff>bank())return;if(diff>0)spend(diff);else if(diff<0)refund(-diff);bj.bets[i]=n;seat=i;render();if(diff>0)animate('player',`seat-${i}`,diff);}
+function setBet(i,n){if(bj.phase!=='bet'||i<0||i>4)return;const old=bj.bets[i],diff=n-old;if(n<0||!Number.isInteger(n)||diff>bank())return;if(diff>0)spend(diff);else if(diff<0)refund(-diff);bj.bets[i]=n;seat=i;render();if(diff>0)animateChipToSeat(i,diff);}
 function add(i,n){setBet(i,bj.bets[i]+n)}
 function deal(){
  if(bj.phase!=='bet'||!bj.bets.some(Boolean))return;
@@ -42,7 +42,7 @@ function active(){const s=bj.hands[bj.turn];return s?.find(h=>!h.done)||null;}
 function nextTurn(){while(bj.turn<5){const h=active();if(h){if(isNatural(h)||cardValue(h)===21){h.done=true;continue;}render();return;}bj.turn++;}dealerPlay();}
 function hit(){const h=active();if(!h)return;h.cards.push(takeCard());if(cardValue(h)>=21)h.done=true;bj.message='Card dealt from dealer shoe.';nextTurn();}
 function stand(){const h=active();if(!h)return;h.done=true;nextTurn();}
-function split(){const h=active();if(!h||h.cards.length!==2||!sameRank(h.cards[0],h.cards[1])||!spend(h.bet))return;bj.invested+=h.bet;const group=bj.hands[bj.turn],idx=group.indexOf(h);const a=hand([h.cards[0],takeCard()],h.bet,true),b=hand([h.cards[1],takeCard()],h.bet,true);group.splice(idx,1,a,b);bj.message='Split hands play independently. Split aces may be hit.';render();animate('player',`seat-${bj.turn}`,h.bet);}
+function split(){const h=active();if(!h||h.cards.length!==2||!sameRank(h.cards[0],h.cards[1])||!spend(h.bet))return;bj.invested+=h.bet;const group=bj.hands[bj.turn],idx=group.indexOf(h);const a=hand([h.cards[0],takeCard()],h.bet,true),b=hand([h.cards[1],takeCard()],h.bet,true);group.splice(idx,1,a,b);bj.message='Split hands play independently. Split aces may be hit.';render();animateChipToSeat(bj.turn,h.bet);}
 function double(){const h=active();if(!h||h.cards.length!==2||!spend(h.bet))return;bj.invested+=h.bet;h.bet*=2;h.cards.push(takeCard());h.done=true;nextTurn();}
 function dealerPlay(){bj.phase='dealer';bj.message='Dealer reveals the hole card…';render();
  const token=++sequence;
@@ -74,7 +74,7 @@ function render(){
    const stake=group.length?group.reduce((sum,x)=>sum+x.bet,0):bj.bets[i];
    return `<button type="button" class="bj-seat ${on?'bj-active':''} ${betting&&i===seat?'bj-selected':''}" data-seat="${i}" id="seat-${i}" aria-label="Seat ${i+1}, ${stake} chips">
     <span class="bj-seat-label">HAND ${i+1}</span><div class="bj-seat-cards">${shown}</div>
-    <span class="bj-stack">${stake?'◉ '+fmt(stake):'+ BET'}</span></button>`;
+    <span class="bj-stack">${stake?`<span class="bj-mini-chips" aria-hidden="true"><i></i><i></i><i></i></span><span class="bj-stake-amount">${fmt(stake)}</span>`:'+ BET'}</span></button>`;
  }).join('');
  page('Blackjack',`<section class="bj-app">
  <div class="bj-top"><span>PRIVATE TABLE · FIVE HANDS</span><strong>${fmt(bank())} CHIPS</strong></div>
@@ -91,20 +91,16 @@ function render(){
  const controls=$b('#bj-controls');
  document.querySelectorAll('[data-seat]').forEach(el=>{
   const i=Number(el.dataset.seat);
-  el.onclick=()=>{seat=i;if(betting)add(i,selected);else if(playing&&i===bj.turn)render();};
+  el.onclick=()=>{seat=i;if(betting)add(i,selected);};
   el.ondragover=e=>{if(betting)e.preventDefault()};
   el.ondrop=e=>{e.preventDefault();if(betting)add(i,Number(e.dataTransfer.getData('text/plain'))||selected)};
  });
  if(betting){
-  controls.innerHTML=`<div class="bj-tray"><div class="bj-tray-label">YOUR CHIPS · TAP OR DRAG TO A HAND</div>
+  controls.innerHTML=`<div class="bj-tray"><div class="bj-tray-label">SELECT A CHIP · TAP A HAND TO BET</div>
   <div class="bj-chiprow">${denominations.map(n=>`<button draggable="true" data-chip="${n}" class="bj-chip ${selected===n?'chosen':''}">${fmt(n)}</button>`).join('')}</div>
-  <div class="bj-entry"><label>Hand <select id="bj-target">${[0,1,2,3,4].map(i=>`<option value="${i}" ${seat===i?'selected':''}>${i+1}</option>`).join('')}</select></label>
-  <label>Exact wager <input id="bj-amount" type="number" min="0" step="1" inputmode="numeric" value="${bj.bets[seat]}"></label><button id="bj-set">Set Bet</button></div>
   <div class="bj-summary">Total wager: <b>${fmt(bj.bets.reduce((a,b)=>a+b,0))}</b></div>
   <div class="bj-buttons bj-bet-actions"><button id="bj-clear">Clear Bets</button><button class="bj-primary" id="bj-deal" ${bj.bets.some(Boolean)?'':'disabled'}>DEAL CARDS <span>➜</span></button></div></div>`;
   controls.querySelectorAll('[data-chip]').forEach(el=>{el.onclick=()=>{selected=+el.dataset.chip;render()};el.ondragstart=e=>e.dataTransfer.setData('text/plain',el.dataset.chip)});
-  $b('#bj-target').onchange=e=>{seat=+e.target.value;render()};
-  $b('#bj-set').onclick=()=>setBet(seat,Number($b('#bj-amount').value));
   $b('#bj-clear').onclick=()=>{for(let i=0;i<5;i++)if(bj.bets[i])refund(bj.bets[i]);bj.bets.fill(0);render()};
   $b('#bj-deal').onclick=deal;
  }else if(playing){
@@ -118,6 +114,20 @@ function render(){
   $b('#bj-repeat').onclick=()=>repeat(1);$b('#bj-twice').onclick=()=>repeat(2);$b('#bj-new').onclick=newBets;
  }else controls.innerHTML='<div class="bj-dealing-label">DEALING IN PROGRESS…</div>';
  if(done&&bj.modal)$b('#bj-result-close').onclick=()=>{bj.modal=false;render()};
+}
+function animateChipToSeat(i,amount){
+ const target=document.getElementById(`seat-${i}`), origin=document.querySelector(`[data-chip="${selected}"]`)||document.querySelector('.bj-chip');
+ if(!target||!origin)return;
+ const a=origin.getBoundingClientRect(),b=target.getBoundingClientRect();
+ const count=Math.min(3,Math.max(1,Math.ceil(amount/100)));
+ for(let j=0;j<count;j++){
+  const token=document.createElement('span');token.className='bj-fly bj-bet-fly';
+  token.textContent='●';token.style.left=(a.left+a.width/2)+'px';token.style.top=(a.top+a.height/2)+'px';
+  token.style.setProperty('--dx',(b.left+b.width/2-a.left-a.width/2)+'px');
+  token.style.setProperty('--dy',(b.top+b.height*.83-a.top-a.height/2)+'px');
+  token.style.animationDelay=(j*90)+'ms';document.body.append(token);
+  token.addEventListener('animationend',()=>token.remove(),{once:true});
+ }
 }
 function animate(from,to,amount){const a=document.getElementById(from),b=document.getElementById(to),layer=$b('#bj-flying');if(!a||!b||!layer)return;const ar=a.getBoundingClientRect(),br=b.getBoundingClientRect();const chip=document.createElement('span');chip.className='bj-fly';chip.textContent='◉';chip.style.left=(ar.left+ar.width/2)+'px';chip.style.top=(ar.top+ar.height/2)+'px';chip.style.setProperty('--dx',(br.left+br.width/2-ar.left-ar.width/2)+'px');chip.style.setProperty('--dy',(br.top+br.height/2-ar.top-ar.height/2)+'px');document.body.append(chip);chip.addEventListener('animationend',()=>chip.remove(),{once:true});}
 blackjack=create;

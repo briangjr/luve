@@ -41,3 +41,26 @@
 .bj-seat.bj-active,.bj-seat.bj-selected{border-color:#d9b777a0!important;background:#18352677!important}
 .bj-table{background:linear-gradient(180deg,#001a0e33,#04211322),url('assets/casino-table.webp') center/cover!important}
 @media(prefers-reduced-motion:reduce){.bj-card.bj-new-card{animation:none!important}}
+
+/* v0.4.9 — clean betting tray and physical chip stacks */
+.bj-app{max-width:100%;overflow:visible}
+.bj-table{background-position:center center!important;background-size:cover!important;min-height:clamp(350px,99vw,435px)!important;padding:18px 7px 26px!important}
+.bj-seats{position:relative;z-index:2;gap:0!important;align-items:end}
+.bj-seat{padding:5px 1px 8px!important;min-height:clamp(115px,35vw,148px)!important;justify-content:space-between!important}
+.bj-seat.bj-selected{background:#e3bd6c12!important;border:1px solid #d9b77780!important}
+.bj-seat.bj-active{background:#e3bd6c1d!important;border:1px solid #e3c47ca0!important}
+.bj-seat-label{font-size:clamp(8px,2.1vw,10px)!important;white-space:nowrap}
+.bj-stack{min-height:35px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
+.bj-mini-chips{position:relative;display:block;width:26px;height:20px}
+.bj-mini-chips i{position:absolute;left:3px;width:21px;height:11px;border-radius:50%;border:2px dashed #e9d8ae;background:radial-gradient(circle,#f3d8a1 0 24%,#a67831 25% 70%,#eed2a2 71%);box-shadow:0 2px 3px #0008}
+.bj-mini-chips i:nth-child(1){top:8px}.bj-mini-chips i:nth-child(2){top:4px}.bj-mini-chips i:nth-child(3){top:0}
+.bj-stake-amount{font-size:10px;font-weight:800;color:#ffe3aa;text-shadow:0 1px 3px #000}
+.bj-tray{padding:12px 10px 13px!important;background:linear-gradient(180deg,#1b1d1b,#111412)!important}
+.bj-chiprow{margin:14px 0 12px!important;gap:clamp(7px,3vw,13px)!important}
+.bj-chip{width:clamp(50px,14vw,61px)!important;height:clamp(50px,14vw,61px)!important}
+.bj-entry{display:none!important}
+.bj-summary{margin:10px 0!important;color:#e8d4af}
+.bj-bet-actions{margin-top:11px!important}
+.bj-bet-fly{font-size:32px;color:#e8b960;text-shadow:0 0 0 #a8792b,0 2px 7px #000;animation-duration:.75s}
+.bj-message{margin:10px 0 12px!important;min-height:32px!important}
+@media(max-width:390px){.bj-table{min-height:350px!important;padding:13px 4px 20px!important}.bj-seat{min-height:118px!important}.bj-stake-amount{font-size:9px}}
