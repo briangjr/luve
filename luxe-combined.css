@@ -1,0 +1,28 @@
+
+/* Luxe Arcade v0.4.5 combined visual expansion */
+.paid-premium h1{font:500 33px Georgia,serif;margin:6px 0 7px;color:#f9f0df}
+.paid-premium h1 em{font-style:normal;color:#dfbd86}
+#paid-options{display:grid;gap:13px;margin:18px 0 26px}
+.paid-photo-button{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;width:100%;height:146px;text-align:left;padding:20px 19px;font:500 24px Georgia,serif;border-radius:17px;border:1px solid #b99c6c8c;background:#18191b;color:#fff5e8;text-shadow:0 2px 10px #000}
+.paid-photo-button:before{content:"";position:absolute;inset:0;z-index:-2;background:var(--paid-art) center/cover no-repeat;transition:transform .4s}
+.paid-photo-button:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#090b0df0,#090b0d8c 46%,#090b0d10)}
+.paid-photo-button:hover:before{transform:scale(1.04)}
+.paid-photo-button small{font:400 12px system-ui,sans-serif;color:#e5d9c7;margin-top:6px}
+.scene.luxe-scene.residence-photo{height:330px;min-height:330px}
+.scene.luxe-scene.residence-photo:before{background:var(--residence-photo) center/cover no-repeat!important;filter:none!important}
+.scene.luxe-scene.residence-photo:after{background:linear-gradient(180deg,#0c0d0f80,#0b0c0d04 36%,#08090ce8 90%)}
+.scene.luxe-scene.residence-photo .scene-title{font-size:11px;font-weight:500;color:#f6e6c6}
+.scene.luxe-scene.residence-photo .scene-actions button{background:#17191bd9;border:1px solid #d3b17d7a;backdrop-filter:blur(12px);font-weight:500}
+.residence-status{font-size:11px;padding:7px 10px;letter-spacing:.01em}
+.residence-label{font-size:17px!important;margin:0 0 6px!important}
+.home-thumb{width:73px;height:61px;min-width:73px;border-radius:9px;background-size:cover;background-position:center;border:1px solid #92785870}
+.purchase-property-image{height:205px;border-radius:12px;background-size:cover;background-position:center;margin-bottom:12px}
+.luxe-select{width:100%;padding:13px;margin:12px 0;background:#17191b;color:#f7ead7;border:1px solid #9b8058;border-radius:10px}
+.casino-photo-felt{position:relative;isolation:isolate;min-height:365px!important;padding-top:30px!important;background:linear-gradient(#0d311c6e,#05261580),url('assets/casino-table.webp') center/cover no-repeat!important;border:8px solid #66452b!important;border-bottom:14px solid #9d6e3f!important;border-radius:44% 44% 20% 20%/24% 24% 14% 14%!important;box-shadow:inset 0 0 30px #0008,0 15px 32px #0009}
+.casino-photo-felt .center.small{background:#07180c9e;color:#f5dfac;letter-spacing:.1em;padding:5px;border-radius:10px;width:max-content;max-width:100%;margin:5px auto}
+.casino-photo-felt .hand{min-height:110px}
+.casino-photo-felt .card{box-shadow:2px 4px 8px #0009;border:1px solid #e2dfd6;background:#f9f8f2}
+.casino-photo-felt .card.back{background:repeating-linear-gradient(45deg,#682c25,#682c25 5px,#b3775a 5px,#b3775a 10px);color:#f3e4cf}
+.golfcanvaswrap{border:2px solid #9c8357!important;border-radius:16px;box-shadow:0 15px 35px #0008}
+.golfhud{color:#e9d3aa!important}
+@media(max-width:380px){.paid-photo-button{height:132px;font-size:21px}.scene.luxe-scene.residence-photo{height:295px;min-height:295px}.home-thumb{width:58px;min-width:58px;height:54px}}
