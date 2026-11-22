@@ -1,51 +1,22 @@
-
-(()=>{
-'use strict';
-const CARDS=[
-["NFL","Patrick Mahomes",2017,"Panini Prizm",900],["NFL","Josh Allen",2018,"Panini Prizm",300],["NFL","Lamar Jackson",2018,"Panini Prizm",180],["NFL","Joe Burrow",2020,"Panini Prizm",130],["NFL","Justin Jefferson",2020,"Panini Prizm",90],["NFL","C.J. Stroud",2023,"Panini Prizm",80],
-["NBA","LeBron James",2003,"Topps",650],["NBA","Stephen Curry",2009,"Topps",450],["NBA","Luka Doncic",2018,"Panini Prizm",280],["NBA","Victor Wembanyama",2023,"Panini Prizm",140],["NBA","Cade Cunningham",2021,"Panini Prizm",55],["NBA","Anthony Edwards",2020,"Panini Prizm",85]
-].map((a,i)=>({id:'c'+i,sport:a[0],player:a[1],year:a[2],set:a[3],value:a[4],front:null,back:null}));
-const KEY='lux_collectibles_v062';
-let state;try{state=JSON.parse(localStorage.getItem(KEY))||{owned:[],history:[]}}catch{state={owned:[],history:[]}};
-let root=null,tab='packs',reveal=[],revealIndex=0,flipped=false;
-const money=n=>'$'+Math.round(n).toLocaleString('en-US');
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
-const getBalance=()=>Number(window.LUXCollectiblesBridge?.getBalance?.()??0);
-const changeBalance=n=>window.LUXCollectiblesBridge?.changeBalance?.(n)===true;
-const drawCard=(c,big=false)=>`<div class="card ${big?'big':''}" data-card="${c.id}">${c[flipped?'back':'front']?`<img src="${esc(c[flipped?'back':'front'])}" alt="Card image">`:`<div style="font-size:42px">✦</div><small>Card image not supplied</small>`}<strong>${esc(c.player)}</strong><small>${esc(c.year)} ${esc(c.set)} · ${esc(c.sport)}</small><b class="gold">${money(c.value)} LUX</b></div>`;
-const list=arr=>`<div class="cards">${arr.map(c=>drawCard(c)).join('')}</div>`;
-function render(){
-if(!root)return;
-root.innerHTML=`<header><b style="letter-spacing:3px">LUX <span class="gold">COLLECTIBLES</span></b><button data-action="close">Close ✕</button></header><div class="tabs"><button data-action="packs">Packs</button><button data-action="collection">Collection (${state.owned.length})</button></div><main>${tab==='packs'?`<div class="panel"><h2>Virtual mystery packs</h2><p>Choose NFL or NBA. Each pack reveals 3 virtual cards.</p><p class="gold">Balance: ${money(getBalance())}</p><div class="actions"><button data-action="buy" data-sport="NFL">NFL · $100</button><button data-action="buy" data-sport="NBA">NBA · $100</button></div></div><p class="notice">Illustrative card metadata and fictional game values. Real card photos are not included yet. No physical ownership or real-money redemption.</p>`:tab==='collection'?`<div class="panel"><h2>Your collection</h2><p>${state.owned.length} cards · game value ${money(state.owned.reduce((s,id)=>s+(CARDS.find(c=>c.id===id)?.value||0),0))}</p><p class="notice">Tap a card to sell it for fictional LUX cash.</p></div>${list(state.owned.map(id=>CARDS.find(c=>c.id===id)).filter(Boolean))}`:tab==='reveal'?`<div class="reveal">${drawCard(reveal[revealIndex],true)}<p style="text-align:center">Card ${revealIndex+1} of ${reveal.length}</p><div class="actions"><button data-action="flip">Flip</button><button data-action="next">${revealIndex+1===reveal.length?'Finish':'Next card →'}</button></div></div>`:''}</main>`;
-}
-function pick(pool){const a=new Uint32Array(1);crypto.getRandomValues(a);return pool[a[0]%pool.length]}
-function buy(sport){
-if(!window.LUXCollectiblesBridge?.getBalance||!window.LUXCollectiblesBridge?.changeBalance){alert('Connect the LUX cash balance first; see README.');return}
-if(getBalance()<100){alert('Not enough LUX cash.');return}
-if(!changeBalance(-100)){alert('Purchase not completed.');return}
-const pool=CARDS.filter(c=>c.sport===sport);reveal=Array.from({length:3},()=>pick(pool));revealIndex=0;flipped=false;
-state.owned.push(...reveal.map(c=>c.id));state.history.push({sport,at:new Date().toISOString(),cards:reveal.map(c=>c.id)});save();tab='reveal';render();
-}
-function sell(id){
-const idx=state.owned.indexOf(id);if(idx<0)return;
-const c=CARDS.find(c=>c.id===id);if(!c)return;
-if(!window.LUXCollectiblesBridge?.changeBalance){alert('Connect the LUX balance first.');return}
-if(!confirm(`Sell ${c.player} for ${money(c.value)} fictional LUX cash?`))return;
-if(!changeBalance(c.value)){alert('Sale could not be completed.');return}
-state.owned.splice(idx,1);save();render();
-}
-function click(e){
-const b=e.target.closest('[data-action]');if(b){const a=b.dataset.action;
-if(a==='close')close();
-if(a==='packs'||a==='collection'){tab=a;render()}
-if(a==='buy')buy(b.dataset.sport);
-if(a==='flip'){flipped=!flipped;render()}
-if(a==='next'){if(++revealIndex>=reveal.length)tab='collection';flipped=false;render()}
-return}
-const card=e.target.closest('[data-card]');if(card&&tab==='collection')sell(card.dataset.card);
-}
-function open(){if(root)return;root=document.createElement('section');root.id='lux-collectibles';root.addEventListener('click',click);document.body.appendChild(root);tab='packs';render()}
-function close(){root?.remove();root=null}
-window.LUXCollectibles={open,close,cardCatalog:CARDS};
+(()=>{'use strict';
+const KEY='lux_collectibles_v062';let data;try{data=JSON.parse(localStorage.getItem(KEY))||{owned:[],history:[]}}catch{data={owned:[],history:[]}};data.owned||=[];data.history||=[];
+const roster={NFL:['Patrick Mahomes','Josh Allen','Lamar Jackson','Joe Burrow','Justin Jefferson','C.J. Stroud','Jahmyr Gibbs','Aidan Hutchinson','Jared Goff','Caleb Williams','Bo Nix','Ja’Marr Chase','Derrick Henry','T.J. Watt','Travis Kelce','Jackson Smith-Njigba','Amon-Ra St. Brown','Brock Purdy','Bijan Robinson','Puka Nacua'],NBA:['LeBron James','Stephen Curry','Luka Dončić','Victor Wembanyama','Cade Cunningham','Anthony Edwards','Shai Gilgeous-Alexander','Jayson Tatum','Cooper Flagg','Dylan Harper','Kevin Durant','Nikola Jokić','Giannis Antetokounmpo','Devin Booker','Tyrese Haliburton','Jalen Brunson','Paolo Banchero','Jaylen Brown','Amen Thompson','Ausar Thompson']};
+const packs=[{id:'fat',name:'Fat Pack',count:10,packSize:10,inserts:3,price:75,tone:'gold',detail:'10 cards · 3 inserts on average'},{id:'blaster',name:'Value / Blaster Box',count:50,packSize:10,inserts:8,price:320,tone:'red',detail:'5 packs × 10 cards · 7–10 inserts'},{id:'mega',name:'Mega Box',count:100,packSize:10,inserts:17,price:650,tone:'blue',detail:'10 packs × 10 cards · 15–20 inserts'},{id:'hobby',name:'Hobby Box',count:120,packSize:10,inserts:25,price:1350,tone:'black',detail:'12 packs × 10 cards · guaranteed autograph'}];
+let root=null,tab='shop',sport='NFL',queue=[],index=0,flip=false,pack=null;
+const money=n=>'$'+Math.round(n).toLocaleString('en-US'),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const balance=()=>Number(window.LUXCollectiblesBridge?.getBalance?.()||0),change=n=>window.LUXCollectiblesBridge?.changeBalance?.(n)===true,save=()=>localStorage.setItem(KEY,JSON.stringify(data));
+function random(max){const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%max}
+function card(i,s,type){const name=roster[s][random(roster[s].length)],year=2026,rare=type==='Autograph'?1800+random(600):type==='Numbered'?150+random(300):type==='Insert'?30+random(65):3+random(12);return{id:'lux-'+Date.now()+'-'+i+'-'+random(99999),sport:s,player:name,year,set:'LUX 2026',type,value:rare,serial:type==='Numbered'?`/${[25,50,99,150][random(4)]}`:'',number:random(300)+1}}
+function boxArt(p){return `<div class="lux63-box ${p.tone}"><span class="lux63-box-top">2026 • ${sport}</span><strong>LUX</strong><span class="lux63-box-mark">${p.id==='fat'?'SEALED PACK':'COLLECTOR SERIES'}</span><span class="lux63-box-bottom">${p.name.toUpperCase()}</span></div>`}
+function cardFace(c){return `<div class="lux63-card-face ${c.type.toLowerCase()}"><div class="lux63-card-head">LUX <small>${c.sport} · ${c.year}</small></div><div class="lux63-card-athlete">${c.sport==='NFL'?'♜':'◉'}</div><div class="lux63-card-player">${esc(c.player)}</div><div class="lux63-card-kind">${esc(c.type)} ${esc(c.serial)}</div><div class="lux63-card-footer">#${c.number} · ${esc(c.set)}</div></div>`}
+function cardBack(c){return `<div class="lux63-card-face back"><div class="lux63-card-head">LUX · 2026</div><div class="lux63-back-logo">◈</div><strong>${esc(c.player)}</strong><small>${esc(c.sport)} · ${esc(c.type)}</small><p>Virtual collector edition · Card #${c.number}</p></div>`}
+function shell(){root.innerHTML=`<div class="lux63-top"><button data-act="close">‹ Back</button><strong>LUX <span>COLLECTIBLES</span></strong><b>${money(balance())}</b></div><div class="lux63-tabs"><button data-act="shop" class="${tab==='shop'?'on':''}">Shop</button><button data-act="collection" class="${tab==='collection'?'on':''}">My Collection (${data.owned.length})</button></div><div class="lux63-main" id="lux63-main"></div>`}
+function render(){if(!root)return;shell();const el=root.querySelector('#lux63-main');if(tab==='shop'){el.innerHTML=`<div class="lux63-hero"><div class="lux63-hero-copy"><small>THE 2026 COLLECTION</small><h2>Rip. Reveal.<br>Collect.</h2><p>Virtual NFL & NBA card packs</p></div></div><div class="lux63-switch"><button data-act="sport" data-sport="NFL" class="${sport==='NFL'?'on':''}">NFL Football</button><button data-act="sport" data-sport="NBA" class="${sport==='NBA'?'on':''}">NBA Basketball</button></div><div class="lux63-products">${packs.map(p=>`<article class="lux63-product">${boxArt(p)}<div class="lux63-product-copy"><strong>${p.name}</strong><small>${p.detail}</small><b>${money(p.price)}</b><button data-act="buy" data-pack="${p.id}">Buy & Open</button></div></article>`).join('')}</div><p class="lux63-note">Virtual cards and fictional LUX values only. Illustrated card designs are not scans of licensed physical cards. Mega/Hobby counts are provisional.</p>`}
+else if(tab==='collection'){el.innerHTML=`<div class="lux63-collection-head"><b>${data.owned.length} cards collected</b><span>Estimated LUX value ${money(data.owned.reduce((a,c)=>a+c.value,0))}</span></div><div class="lux63-collection-grid">${data.owned.slice().reverse().map(c=>`<button class="lux63-col-card" data-act="inspect" data-id="${c.id}">${cardFace(c)}<small>${money(c.value)}</small></button>`).join('')}</div>${data.owned.length?'':'<p>Your collection is empty. Open a pack to get started.</p>'}`}
+else if(tab==='reveal'){const c=queue[index];el.innerHTML=`<div class="lux63-reveal-title"><b>${pack.name} · ${sport}</b><span>Card ${index+1} of ${queue.length}</span></div><button class="lux63-flip" data-act="flip">${flip?cardBack(c):cardFace(c)}</button><div class="lux63-rarity">${esc(c.type)} · Virtual value ${money(c.value)}</div><div class="lux63-reveal-actions"><button data-act="flip">Flip card</button><button data-act="next">${index+1===queue.length?'Finish & View Collection':'Next Card →'}</button></div><div class="lux63-progress"><div style="width:${(index+1)/queue.length*100}%"></div></div>`}
+else if(tab==='inspect'){const c=data.owned.find(x=>x.id===window.lux63Selected);if(!c){tab='collection';render();return}el.innerHTML=`<button data-act="collection">‹ Collection</button><button class="lux63-flip" data-act="flip">${flip?cardBack(c):cardFace(c)}</button><div class="lux63-rarity">${esc(c.player)} · ${money(c.value)} fictional LUX</div><div class="lux63-reveal-actions"><button data-act="flip">Flip card</button><button data-act="sell" data-id="${c.id}">Sell for ${money(c.value)}</button></div>`}}
+function buy(id){const p=packs.find(x=>x.id===id);if(!p)return;if(balance()<p.price){alert('Not enough LUX cash for this pack.');return}if(!change(-p.price)){alert('Purchase could not be completed.');return}const ins=new Set();while(ins.size<p.inserts)ins.add(random(p.count));const auto=p.id==='hobby'?random(p.count):-1;ins.add(auto);queue=Array.from({length:p.count},(_,i)=>card(i,sport,i===auto?'Autograph':ins.has(i)?(random(8)===0?'Numbered':'Insert'):'Base'));data.owned.push(...queue);data.history.push({sport,pack:id,count:p.count,at:new Date().toISOString()});save();pack=p;index=0;flip=false;tab='reveal';render()}
+function click(e){const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;if(a==='close'){close();return}if(a==='shop'||a==='collection'){tab=a;flip=false;render()}if(a==='sport'){sport=b.dataset.sport;render()}if(a==='buy')buy(b.dataset.pack);if(a==='next'){index++;flip=false;if(index>=queue.length)tab='collection';render()}if(a==='flip'){flip=!flip;render()}if(a==='inspect'){window.lux63Selected=b.dataset.id;flip=false;tab='inspect';render()}if(a==='sell'){const c=data.owned.find(x=>x.id===b.dataset.id);if(c&&confirm(`Sell ${c.player} for ${money(c.value)} fictional LUX?`)&&change(c.value)){data.owned.splice(data.owned.indexOf(c),1);save();tab='collection';render()}}}
+function open(){if(root)return;root=document.createElement('section');root.id='lux-collectibles';root.addEventListener('click',click);document.body.append(root);tab='shop';render()}
+function close(){root?.remove();root=null}window.LUXCollectibles={open,close,packs};
 })();

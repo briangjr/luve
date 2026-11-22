@@ -11,6 +11,6 @@ const oldPaid=paid;paid=function(){page('Get Paid',`<div class="lux62-paid"><div
 const oldLifestyle=lifestyle;lifestyle=function(){oldLifestyle();const links=document.querySelector('#lifeLinks')||screen;[['Auto Financing',()=>window.LUXRacing?.finance()],['Net Worth',()=>window.LUXRacing?.dashboard()],['Payment Calendar',financialCalendar]].forEach(([name,fn])=>links.append(btn(name,fn)));navClean()};
 const oldShopCategory=shopCategory;shopCategory=function(cat){if(cat==='cars'){window.LUXRacing?.finance();return}oldShopCategory(cat)};
 const oldShop=shop;shop=function(){oldShop();const buttons=document.querySelectorAll('#storeCategories button');for(const b of buttons){if(/cars/i.test(b.textContent)){b.onclick=()=>window.LUXRacing?.finance()}}navClean()};
-function init(){navClean();document.querySelectorAll('#app nav button').forEach(b=>{if(b.dataset.nav==='paid')b.onclick=()=>paid()});}
+function init(){navClean();document.querySelectorAll('#app nav button').forEach(b=>{if(b.dataset.nav==='paid'){b.addEventListener('click',e=>{e.stopImmediatePropagation();paid()},true);b.onclick=null}});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
