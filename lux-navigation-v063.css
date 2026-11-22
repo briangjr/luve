@@ -1,0 +1,8 @@
+/* v0.6.3 — 3-button bottom navigation and Get Paid cards */
+#app nav{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;flex-wrap:nowrap!important;gap:4px!important;align-items:stretch!important;padding-bottom:max(6px,env(safe-area-inset-bottom))!important}
+#app nav button:not([data-nav="home"]):not([data-nav="paid"]):not([data-nav="settings"]){display:none!important}
+#app nav [data-nav]{min-width:0!important;max-width:none!important;white-space:nowrap!important}
+#paid-options{display:grid;grid-template-columns:1fr;gap:10px}
+#paid-options .lux63-tile,.lux63-tile{width:100%;min-height:116px;max-height:160px;position:relative;display:flex;justify-content:space-between;align-items:flex-end;overflow:hidden;text-align:left;padding:16px!important;background-image:linear-gradient(90deg,rgba(0,0,0,.83),rgba(0,0,0,.20)),var(--lux63-image)!important;background-size:cover!important;background-position:center!important;border:1px solid #9c783d!important;border-radius:14px!important;color:#fff!important;box-shadow:0 9px 24px #0006}
+.lux63-copy{display:flex;flex-direction:column;gap:5px;position:relative;z-index:1}.lux63-copy strong{font-size:18px;letter-spacing:.02em;text-shadow:0 2px 7px #000}.lux63-copy small{font-size:11px;color:#f0d7a4;text-shadow:0 1px 4px #000}.lux63-arrow{font-size:27px;position:relative;z-index:1;color:#f4d48b}
+@media(max-height:700px){#paid-options .lux63-tile{min-height:94px;padding:12px!important}}

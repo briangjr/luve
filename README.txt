@@ -1,1 +1,7 @@
-LUX v0.6.2 incremental patch. Requires v0.6.1 and all previous files. Upload index.html, collectibles-v062.js and collectibles-v062.css to repository root. Do not delete other files. 24 named NFL/NBA starter catalog entries, 5-card fictional mystery packs, one-by-one reveals, flip view, collection and fictional resale. Card prices are illustrative game prices, NOT market valuations. Real card photos are NOT included because licensed/verified front/back scans were unavailable. The card viewer supports front/back image paths in catalog data when authorized image files are provided. Saves to existing state/save().
+LUX v0.6.3 FIX — apply AFTER v0.6.2
+
+Upload these files into the repository root; upload the two .webp images into assets/. Replace index.html, racing-v061.js and collectibles-v062.js. Keep all other files.
+
+Fixes: Street Racing and Card Chasing are large image cards under Get Paid; bottom nav remains Home, Get Paid, Settings. Removes unwanted bottom launcher buttons. Racing and card features keep the previous save data.
+
+NOTE: Real sports card photographs are NOT part of this update; previous placeholders remain. No live iPhone browser test was performed.
