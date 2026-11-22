@@ -21,5 +21,6 @@ function reveal(){if(!modal)return;const c=queue[pos],root=$('#lux62-body');root
 function detail(i){const owned=store().cards[i];if(!owned)return render();const c=C.find(c=>c.id===owned.id);const root=$('#lux62-body');let back=false;function draw(){root.innerHTML=`<div class="lux62-reveal">${cardFace(c,back)}<h2>${c.player}</h2><p>${c.year} · ${c.set} · ${c.number}</p><strong>${money(c.value)} fictional value</strong><div class="lux62-actions"><button id="lux62-flip">FLIP</button><button id="lux62-sell">SELL FOR ${money(c.value)}</button><button id="lux62-return">BACK</button></div></div>`;$('#lux62-flip').onclick=()=>{back=!back;draw()};$('#lux62-return').onclick=render;$('#lux62-sell').onclick=()=>{if(!confirm(`Sell this virtual card for ${money(c.value)} LUX cash?`))return;state.cash+=c.value;store().cards.splice(i,1);store().sales++;save();render()}}draw()}
 function launcher(){if($('#lux62-launcher'))return;const b=document.createElement('button');b.id='lux62-launcher';b.textContent='◈ Collectibles';b.onclick=open;const nav=$('#app nav');nav?.append(b)}
 function init(){try{if(typeof state==='undefined'||typeof save!=='function')return;store();launcher()}catch(e){console.warn('LUX Collectibles init:',e)}}
+window.luxCardChasing={open};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

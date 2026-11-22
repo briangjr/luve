@@ -1,7 +1,1 @@
-LUX v0.6.4 — GET PAID SIX-GAME FIX
-
-Upload all files from this ZIP to the ROOT of your existing GitHub repository. Keep folder paths, especially assets/. Replace matching files. This includes earlier module dependencies to repair missing features. Do NOT delete other game files. Wait for Netlify deployment and reload the app (on iPhone, close/reopen the home-screen app).
-
-Get Paid now shows six choices: Golf, Blackjack, Roulette, Cornhole, Street Racing, Card Chasing. The old oversized Play to Progress hero is removed. Bottom nav remains Home / Get Paid / Settings. Existing local save is untouched.
-
-Card photos remain placeholders, not actual card scans. Racing remains a simple canvas prototype.
+LUX v0.6.5 - working Get Paid tile fix. Upload ONLY these files to the root of your existing GitHub repo, keeping the assets folder structure. Replace index.html, racing-v061.js, collectibles-v062.js; add lux-navigation-v065.js/css and six tile images. Do NOT delete other game files. Bottom navigation stays Home / Get Paid / Settings. Cache-busted new navigation files. The images are newly generated artwork, not scans of real sports cards. JavaScript syntax verified; live iPhone testing not performed.
