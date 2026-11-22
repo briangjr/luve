@@ -1,7 +1,7 @@
-LUX v0.6.5 Street Racing PATCH
+LUX v0.6.6 Racing Visual & Gameplay Patch
 
-Upload index.html, racing-v065.js, racing-v065.css and assets/lux-race-hero.webp to the root of your existing GitHub LUX site. Replace index.html, keep all other files. Netlify redeploys automatically.
+Upload index.html, racing-v065.js, racing-v065.css to existing GitHub site, replacing matching files. Preserve all other files and assets.
 
-Includes: owned cars free to race; one-race rentals charged on starting; four difficulties; 4-8 competitors; payout for first, second and third; nighttime 3-lane downtown arcade racing with touch steering, acceleration and braking, rare traffic; saved cash and wins/losses; portrait/landscape responsive game.
+Changes: detailed perspective city-night canvas, illuminated skyscrapers, moving lane markers, streetlights, shaded car sprites, headlights/taillights, collision flash, speed and placement HUD, polished mobile control buttons, landscape layout. Existing owned cars, rentals, difficulty, payouts and save system remain.
 
-This is a new arcade racing mode using canvas art, not photorealistic 3D. Existing car models are sourced from your project assets.
+No full 3D engine; this remains a 2D canvas arcade racer. Syntax checked; not browser-tested.
