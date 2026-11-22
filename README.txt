@@ -1,9 +1,7 @@
-LUX v0.6.4 FIRST-CLICK FIX
+LUX v0.6.5 Street Racing PATCH
 
-Replace premium.js and index.html at the root of your existing LUX project. Keep all other files, CSS, assets, and local save data.
+Upload index.html, racing-v065.js, racing-v065.css and assets/lux-race-hero.webp to the root of your existing GitHub LUX site. Replace index.html, keep all other files. Netlify redeploys automatically.
 
-Root cause: premium.js captured the OLD paid function as a callback when the home buttons were constructed. It must call paid() dynamically when tapped, after lux-v062.js overrides paid with the six-tile screen. Cache-bust premium.js and lux-v062.js references in index.html.
+Includes: owned cars free to race; one-race rentals charged on starting; four difficulties; 4-8 competitors; payout for first, second and third; nighttime 3-lane downtown arcade racing with touch steering, acceleration and braking, rare traffic; saved cash and wins/losses; portrait/landscape responsive game.
 
-Expected: Home -> Get Paid opens the six rectangular tiles on the first tap. The bottom Get Paid navigation also opens that screen.
-
-Syntax checked; no live iPhone testing.
+This is a new arcade racing mode using canvas art, not photorealistic 3D. Existing car models are sourced from your project assets.
