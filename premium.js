@@ -31,7 +31,7 @@
     document.querySelector('#wealth-residence').textContent=typeof currentHome==='function'?currentHome().name:'Your journey';
     const a=document.querySelector('#wealth-actions');
     addAction(a,'Lifestyle','Residence · Garage · Wardrobe','⌂','lifestyle-suite.webp',lifestyle,0);
-    addAction(a,'Get Paid','Golf · Blackjack','♠','get-paid-tables.webp',paid,1);
+    addAction(a,'Get Paid','Six games · Earn cash','♠','get-paid-tables.webp',()=>paid(),1);
     addAction(a,'Spend Money','Cars · Fashion · Property','◇','spend-money-auto.webp',shop,2);
     setActive('home');
     requestAnimationFrame(()=>document.querySelector('#wealth-home')?.classList.add('is-visible'));
